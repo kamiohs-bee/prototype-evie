@@ -6,6 +6,7 @@ import characterDefault from './assets/character_default.png';
 import characterSad from './assets/character_sad.png';
 import characterHappy from './assets/character_happy.png';
 import characterExcited from './assets/character_excited.png';
+import characterListening from './assets/character_listening.png';
 import bubbleLeft from './assets/bubble_left.png';
 import bubbleRight from './assets/bubble_right.png';
 import panelDailyMission from './assets/panel_daily_mission.png';
@@ -26,6 +27,7 @@ const characterAssets = {
   default: characterDefault,
   happy: characterHappy,
   excited: characterExcited,
+  listening: characterListening,
 };
 
 const characterLayout = {
@@ -33,6 +35,7 @@ const characterLayout = {
   default: { left: 374, top: 289, width: 314, height: 461 },
   happy: { left: 374, top: 283, width: 315, height: 467 },
   excited: { left: 352, top: 282, width: 345, height: 471 },
+  listening: { left: 421, top: 289, width: 424, height: 470 },
 };
 
 const steps = [
@@ -86,6 +89,14 @@ const steps = [
   {
     id: 6,
     tone: 'bright',
+    character: 'listening',
+    bubbles: [{ side: 'left', text: ['좋아, 듣고 있어.', '천천히 말해줘!'], left: 96, top: 248 }],
+    showPanel: true,
+    listening: true,
+  },
+  {
+    id: 7,
+    tone: 'bright',
     character: 'excited',
     bubbles: [
       { side: 'left', text: ['정말 잘했어!', '에너지가 채워졌어!'], left: 96, top: 248 },
@@ -96,7 +107,7 @@ const steps = [
     cta: { label: '다음', left: 565, top: 826, width: 236 },
   },
   {
-    id: 7,
+    id: 8,
     tone: 'bright',
     character: 'excited',
     bubbles: [{ side: 'left', text: ['야호! 오늘 말 먹이', '다 먹었어!'], left: 96, top: 248 }],
@@ -106,16 +117,17 @@ const steps = [
     replayButton: true,
   },
   {
-    id: 8,
+    id: 9,
     tone: 'bright',
     character: 'happy',
     bubbles: [{ side: 'right', text: ['먹이를 줄수록', '이비 에너지가 쌓여!'], left: 704, top: 369 }],
     showPanel: true,
     hearts: 3,
     showProgress: true,
+    replayButton: true,
   },
   {
-    id: 9,
+    id: 10,
     tone: 'bright',
     character: 'happy',
     bubbles: [
@@ -126,9 +138,11 @@ const steps = [
     hearts: 3,
     showProgress: true,
     collection: true,
+    collectionHighlight: true,
+    replayButton: true,
   },
   {
-    id: 10,
+    id: 11,
     tone: 'bright',
     character: 'default',
     bubbles: [
@@ -140,6 +154,7 @@ const steps = [
     hearts: 3,
     showProgress: true,
     collection: true,
+    replayButton: true,
   },
 ];
 
@@ -186,14 +201,14 @@ function Asset({ src, alt, className = '', style, interactive = false }) {
 function HeaderButtons() {
   return (
     <>
-      <Asset src={logo} alt="말씨톡 로고" className="ui-glow appbar-in" style={{ left: 31, top: 34, width: 245, height: 148 }} />
+      <Asset src={logo} alt="말씨톡 로고" className="ui-glow appbar-in" style={{ left: 31, top: 18, width: 245, height: 148 }} />
       <button className="asset-button absolute left-[1135px] top-[25px] z-50 h-[93px] w-[93px]" aria-label="메시지" onClick={(event) => event.stopPropagation()}>
         <Asset src={btnMessage} alt="" className="button-glow" style={{ inset: 0, width: 93, height: 93 }} interactive />
       </button>
       <button className="asset-button absolute left-[1235px] top-[25px] z-50 h-[93px] w-[93px]" aria-label="설정" onClick={(event) => event.stopPropagation()}>
         <Asset src={btnSetting} alt="" className="button-glow" style={{ inset: 0, width: 93, height: 93 }} interactive />
       </button>
-      <div className="absolute left-[285px] top-[70px] z-50 rounded-full bg-white/75 px-7 py-3 text-[24px] font-black text-violet-600 shadow-soft">
+      <div className="absolute left-[285px] top-[54px] z-50 rounded-full bg-white/75 px-7 py-3 text-[24px] font-black text-violet-600 shadow-soft">
         이비
       </div>
     </>
@@ -254,19 +269,25 @@ function CharacterArea({ state }) {
   );
 }
 
-function MissionPanel({ mode, hearts = 0, showStart = false, showReplay = false, onNext }) {
+function MissionPanel({ mode, hearts = 0, showStart = false, showReplay = false, listening = false, onNext }) {
   return (
     <aside className="absolute left-[1035px] top-[146px] z-30 h-[755px] w-[263px] panel-slide">
       <Asset src={panelDailyMission} alt="오늘의 미션 패널" className="ui-shadow panel-breathe" style={{ left: 0, top: 0, width: 263, height: 755 }} />
       {hearts > 0 && (
-        <div className="absolute left-[79px] top-[165px] grid gap-[71px]">
+        <div className="absolute left-[79px] top-[142px] grid gap-[71px]">
           {[0, 1, 2].map((heart) => (
-            <div key={heart} className={`mission-heart ${heart < hearts ? 'filled' : ''}`}>♥</div>
+            <div
+              key={heart}
+              className={`mission-heart ${heart < hearts ? 'filled' : ''}`}
+              style={{ '--heart-shift': heart === 1 ? '-10px' : heart === 2 ? '-20px' : '0px' }}
+            >
+              ♥
+            </div>
           ))}
         </div>
       )}
       {showReplay && (
-        <div className="absolute left-[30px] top-[512px] z-40 grid w-[202px] gap-3">
+        <div className="absolute left-[30px] top-[632px] z-40 grid w-[202px] gap-3">
           <button
             className="secondary-button panel-secondary"
             onClick={(event) => {
@@ -284,6 +305,11 @@ function MissionPanel({ mode, hearts = 0, showStart = false, showReplay = false,
           >
             다시 하기
           </button>
+        </div>
+      )}
+      {listening && (
+        <div className="absolute left-[30px] top-[604px] z-40 grid h-[56px] w-[202px] place-items-center rounded-[20px] bg-violet-500/70 text-[19px] font-black text-white shadow-soft">
+          말하는 중...
         </div>
       )}
       {mode === 'highlightStart' && <div className="absolute left-[22px] top-[596px] h-[132px] w-[236px] rounded-[36px] ring-8 ring-white/75 highlight-pulse" />}
@@ -305,7 +331,7 @@ function MissionPanel({ mode, hearts = 0, showStart = false, showReplay = false,
 
 function ProgressBar() {
   return (
-    <div className="custom-progress absolute left-[354px] top-[842px] z-30 h-[105px] w-[700px] progress-glow">
+    <div className="custom-progress absolute left-[304px] top-[842px] z-30 h-[105px] w-[700px] progress-glow">
       <div className="progress-shell absolute left-[48px] top-[23px] h-[58px] w-[642px] rounded-full border-[6px] border-white bg-white/90 shadow-soft">
         <div className="progress-rail absolute left-[72px] top-[13px] h-[28px] w-[392px] overflow-hidden rounded-full bg-violet-200">
           <div className="progress-fill h-full rounded-r-full bg-gradient-to-r from-fuchsia-500 via-pink-400 to-violet-500" />
@@ -320,9 +346,9 @@ function ProgressBar() {
   );
 }
 
-function CharacterCollectionButton() {
+function CharacterCollectionButton({ highlight = false }) {
   return (
-    <div className="absolute left-[154px] top-[806px] z-30 h-[161px] w-[179px] collection-in">
+    <div className={`absolute left-[104px] top-[806px] z-30 h-[161px] w-[179px] collection-in ${highlight ? 'collection-pulse' : ''}`}>
       <button className="asset-button h-full w-full" aria-label="캐릭터 모음" onClick={(event) => event.stopPropagation()}>
         <Asset src={levelCharacterButton} alt="" className="ui-shadow button-glow" style={{ inset: 0, width: 179, height: 161 }} interactive />
       </button>
@@ -346,6 +372,19 @@ function MissionCard({ onNext }) {
       >
         말하기
       </button>
+    </div>
+  );
+}
+
+function ListeningStatus() {
+  return (
+    <div className="absolute left-[362px] top-[742px] z-40 flex w-[542px] flex-col items-center gap-5">
+      <div className="listening-wave" aria-hidden="true">
+        {Array.from({ length: 17 }).map((_, index) => (
+          <span key={index} style={{ animationDelay: `${(index % 6) * 0.08}s` }} />
+        ))}
+      </div>
+      <div className="listening-pill">말하는 중...</div>
     </div>
   );
 }
@@ -414,10 +453,11 @@ function OnboardingStep({ step, index, onNext }) {
       {step.bubbles.map((bubble, bubbleIndex) => (
         <OnboardingBubble key={`${step.id}-${bubbleIndex}`} bubble={bubble} index={bubbleIndex} />
       ))}
-      {step.showPanel && <MissionPanel mode={step.panelMode} hearts={step.hearts} showStart={step.startButton} showReplay={step.replayButton} onNext={onNext} />}
+      {step.showPanel && <MissionPanel mode={step.panelMode} hearts={step.hearts} showStart={step.startButton} showReplay={step.replayButton} listening={step.listening} onNext={onNext} />}
       {step.showProgress && <ProgressBar />}
-      {step.collection && <CharacterCollectionButton />}
+      {step.collection && <CharacterCollectionButton highlight={step.collectionHighlight} />}
       {step.missionCard && <MissionCard onNext={onNext} />}
+      {step.listening && <ListeningStatus />}
       {step.cta && <PrototypeCTA cta={step.cta} onNext={onNext} />}
       {step.confetti && <Confetti />}
       <StepIndicator current={index} />
@@ -431,7 +471,7 @@ function App() {
   const step = steps[stepIndex];
 
   const goNext = React.useCallback(() => {
-    setStepIndex((current) => Math.min(current + 1, steps.length - 1));
+    setStepIndex((current) => (current + 1) % steps.length);
   }, []);
 
   const goPrevious = React.useCallback(() => {
