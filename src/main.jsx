@@ -53,7 +53,7 @@ const steps = [
     tone: 'dark',
     character: 'sad',
     bubbles: [
-      { side: 'left', text: ['네 목소리를 들으면', '힘이 날 것 같아!'], left: 96, top: 257 },
+      { side: 'left', text: ['네 목소리를 들으면', '힘이 날 것 같아!'], left: 96, top: 257, paddingLeft: 28 },
       { side: 'right', text: ['목소리를', '들려줄래?'], left: 704, top: 369 },
     ],
     cta: { label: '응, 들려줄게!', left: 508, top: 822, width: 350, extraClass: 'cta-next' },
@@ -84,7 +84,7 @@ const steps = [
     character: 'happy',
     bubbles: [
       { side: 'left', text: ['내가 먼저 말할게.', '따라해봐!'], left: 96, top: 257 },
-      { side: 'right', text: ['빨간 사과'], left: 704, top: 369, fontSize: 44, color: '#ef4444' },
+      { side: 'right', text: ['빨간 사과'], left: 704, top: 369, fontSize: 44, color: '#ef4444', textCenter: true },
     ],
     showPanel: true,
     missionCard: true,
@@ -105,12 +105,12 @@ const steps = [
     tone: 'bright',
     character: 'excited',
     bubbles: [
-      { side: 'left', text: ['정말 잘했어!', '에너지가 채워졌어!'], left: 96, top: 248 },
+      { side: 'left', text: ['정말 잘했어!', '에너지가 채워졌어!'], left: 96, top: 248, paddingLeft: 28 },
       { side: 'right', text: ['다음 말 먹이도', '따라해보자!'], left: 704, top: 369 },
     ],
     showPanel: true,
     hearts: 1,
-    cta: { label: '다음', left: 350, top: 800, width: 320, extraClass: 'cta-next' },
+    cta: { label: '다음', left: 380, top: 800, width: 320, extraClass: 'cta-next' },
   },
   {
     id: 8,
@@ -126,7 +126,7 @@ const steps = [
     id: 9,
     tone: 'bright',
     character: 'happy',
-    bubbles: [{ side: 'right', text: ['먹이를 줄수록', '이비 에너지가 쌓여!'], left: 704, top: 369 }],
+    bubbles: [{ side: 'right', text: ['먹이를 줄수록', '이비 에너지가 쌓여!'], left: 704, top: 369, paddingLeft: 28 }],
     showPanel: true,
     hearts: 3,
     showProgress: true,
@@ -137,7 +137,7 @@ const steps = [
     tone: 'bright',
     character: 'happy',
     bubbles: [
-      { side: 'left', text: ['에너지가 차면', '새 친구가 올지도 몰라!'], left: 96, top: 245, paddingLeft: 28 },
+      { side: 'left', text: ['에너지가 차면', '새 친구가 올거야!'], left: 96, top: 245, paddingLeft: 28 },
       { side: 'right', text: ['어떤 친구가 올지', '기대되지 않아?'], left: 704, top: 369 },
     ],
     showPanel: true,
@@ -258,8 +258,9 @@ function OnboardingBubble({ bubble, index }) {
     >
       <Asset src={asset} alt={`${bubble.side === 'left' ? '왼쪽' : '오른쪽'} 말풍선`} style={{ left: 0, top: 0, width: 273, height: 153 }} />
       <p
-        className={`absolute ${textClass} whitespace-pre-line text-[25px] font-black leading-tight text-violet-700 drop-shadow-[0_2px_0_rgba(255,255,255,0.85)]`}
+        className={`absolute ${textClass} whitespace-pre-line text-[28px] font-black leading-tight text-violet-700 drop-shadow-[0_2px_0_rgba(255,255,255,0.85)]`}
         style={{
+          fontFamily: "'MaplestoryOTF', sans-serif",
           ...(bubble.fontSize && { fontSize: `${bubble.fontSize}px` }),
           ...(bubble.color && { color: bubble.color }),
         }}
@@ -340,7 +341,7 @@ function MissionPanel({ mode, hearts = 0, showStart = false, showReplay = false,
 
 function ProgressBar() {
   return (
-    <div className="custom-progress absolute left-[304px] top-[842px] z-30 h-[105px] w-[700px] progress-glow">
+    <div className="custom-progress absolute left-[304px] top-[812px] z-30 h-[105px] w-[700px] progress-glow">
       <div className="progress-shell absolute left-[48px] top-[23px] h-[58px] w-[642px] rounded-full border-[6px] border-white bg-white/90 shadow-soft">
         <div className="progress-rail absolute left-[72px] top-[13px] h-[28px] w-[392px] overflow-hidden rounded-full bg-violet-200">
           <div className="progress-fill h-full rounded-r-full bg-gradient-to-r from-fuchsia-500 via-pink-400 to-violet-500" />
@@ -357,7 +358,7 @@ function ProgressBar() {
 
 function CharacterCollectionButton({ highlight = false }) {
   return (
-    <div className={`absolute left-[104px] top-[806px] z-30 h-[161px] w-[179px] collection-in ${highlight ? 'collection-pulse' : ''}`}>
+    <div className={`absolute left-[104px] top-[776px] z-30 h-[161px] w-[179px] collection-in ${highlight ? 'collection-pulse' : ''}`}>
       <button className="asset-button h-full w-full" aria-label="캐릭터 모음" onClick={(event) => event.stopPropagation()}>
         <Asset src={levelCharacterButton} alt="" className="ui-shadow button-glow" style={{ inset: 0, width: 179, height: 161 }} interactive />
       </button>
@@ -367,7 +368,7 @@ function CharacterCollectionButton({ highlight = false }) {
 
 function MissionCard({ onNext }) {
   return (
-    <div className="absolute left-[350px] top-[800px] z-40 mission-card">
+    <div className="absolute left-[380px] top-[800px] z-40 mission-card">
       <button
         className="prototype-button cta-next mic-pulse w-[320px]"
         onClick={(event) => {

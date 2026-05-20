@@ -1,7 +1,23 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'MaplestoryOTF';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/MaplestoryOTFBold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'MaplestoryOTF';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/MaplestoryOTFLight.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+}
+
 * {
   box-sizing: border-box;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600 !important;
 }
 
 html,
@@ -19,6 +35,7 @@ button {
   border: 0;
   padding: 0;
   background: transparent;
+  font-weight: 700 !important;
 }
 
 .app-shell {
@@ -179,6 +196,7 @@ button {
   border-width: 2px;
   padding: 22px 34px;
   background: #8b46fa;
+  font-family: 'MaplestoryOTF', sans-serif;
 }
 
 .secondary-button {
