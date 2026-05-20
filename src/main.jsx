@@ -63,7 +63,7 @@ const steps = [
   {
     id: 3,
     tone: 'bright',
-    character: 'excited',
+    character: 'happy',
     centeredOffset: 155,
     bubbles: [
       { side: 'left', text: ['정말?!', '고마워!'], left: 253, top: 248 },
@@ -82,11 +82,12 @@ const steps = [
     panelMode: 'highlightStart',
     startButton: true,
     showEmptyHearts: true,
+    confetti: true,
   },
   {
     id: 5,
     tone: 'bright',
-    character: 'happy',
+    character: 'default',
     bubbles: [
       { side: 'left', text: ['내가 먼저 말할게.', '따라해봐!'], left: 96, top: 257 },
       { side: 'right', text: ['빨간 사과'], left: 704, top: 369, fontSize: 44, color: '#ef4444', textCenter: true },
@@ -117,6 +118,7 @@ const steps = [
     ],
     showPanel: true,
     hearts: 1,
+    confetti: true,
     cta: { label: '다음', left: 380, top: 800, width: 320, extraClass: 'cta-next' },
     bgLeft: -133,
   },
@@ -446,7 +448,7 @@ function PrototypeCTA({ cta, onNext }) {
 function Confetti() {
   const particles = Array.from({ length: 34 }, (_, index) => {
     const angle = (Math.PI * 2 * index) / 34;
-    const distance = 135 + (index % 7) * 22;
+    const distance = 200 + (index % 7) * 45;
     return {
       x: Math.round(Math.cos(angle) * distance),
       y: Math.round(Math.sin(angle) * distance),

@@ -326,7 +326,7 @@ button {
 .confetti-layer {
   position: absolute;
   inset: 0;
-  z-index: 70;
+  z-index: 15;
   pointer-events: none;
   overflow: hidden;
 }
