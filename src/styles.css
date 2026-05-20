@@ -11,9 +11,7 @@ body,
   height: 100%;
   margin: 0;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 50% 45%, rgba(255, 202, 232, 0.35), transparent 45%),
-    #f59cc2;
+  background: #292929;
 }
 
 button {
@@ -136,11 +134,11 @@ button {
 
 .mission-heart {
   display: grid;
-  width: 104px;
-  height: 104px;
+  width: 150px;
+  height: 150px;
   place-items: center;
   color: rgba(239, 92, 198, 0.18);
-  font-size: 96px;
+  font-size: 140px;
   line-height: 1;
   transform: translateY(var(--heart-shift, 0)) rotate(-4deg);
   -webkit-text-stroke: 3px #ee62ca;
@@ -175,6 +173,12 @@ button {
 .prototype-button:hover {
   transform: scale(1.05);
   filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.78)) drop-shadow(0 0 18px rgba(160, 92, 255, 0.52));
+}
+
+.cta-next {
+  border-width: 2px;
+  padding: 22px 34px;
+  background: #8b46fa;
 }
 
 .secondary-button {

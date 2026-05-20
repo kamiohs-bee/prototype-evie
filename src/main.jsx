@@ -56,7 +56,7 @@ const steps = [
       { side: 'left', text: ['네 목소리를 들으면', '힘이 날 것 같아!'], left: 96, top: 257 },
       { side: 'right', text: ['목소리를', '들려줄래?'], left: 704, top: 369 },
     ],
-    cta: { label: '응, 들려줄게!', left: 508, top: 822, width: 350 },
+    cta: { label: '응, 들려줄게!', left: 508, top: 822, width: 350, extraClass: 'cta-next' },
   },
   {
     id: 3,
@@ -76,15 +76,20 @@ const steps = [
     showPanel: true,
     panelMode: 'highlightStart',
     startButton: true,
+    showEmptyHearts: true,
   },
   {
     id: 5,
     tone: 'bright',
     character: 'happy',
-    bubbles: [{ side: 'left', text: ['내가 먼저 말할게.', '따라해봐!'], left: 96, top: 257 }],
+    bubbles: [
+      { side: 'left', text: ['내가 먼저 말할게.', '따라해봐!'], left: 96, top: 257 },
+      { side: 'right', text: ['빨간 사과'], left: 704, top: 369, fontSize: 44, color: '#ef4444' },
+    ],
     showPanel: true,
     missionCard: true,
     speakButton: true,
+    showEmptyHearts: true,
   },
   {
     id: 6,
@@ -93,6 +98,7 @@ const steps = [
     bubbles: [{ side: 'left', text: ['좋아, 듣고 있어.', '천천히 말해줘!'], left: 96, top: 248 }],
     showPanel: true,
     listening: true,
+    showEmptyHearts: true,
   },
   {
     id: 7,
@@ -104,7 +110,7 @@ const steps = [
     ],
     showPanel: true,
     hearts: 1,
-    cta: { label: '다음', left: 565, top: 826, width: 236 },
+    cta: { label: '다음', left: 350, top: 800, width: 320, extraClass: 'cta-next' },
   },
   {
     id: 8,
@@ -131,7 +137,7 @@ const steps = [
     tone: 'bright',
     character: 'happy',
     bubbles: [
-      { side: 'left', text: ['에너지가 차면', '새 친구가 올지도 몰라!'], left: 96, top: 245 },
+      { side: 'left', text: ['에너지가 차면', '새 친구가 올지도 몰라!'], left: 96, top: 245, paddingLeft: 28 },
       { side: 'right', text: ['어떤 친구가 올지', '기대되지 않아?'], left: 704, top: 369 },
     ],
     showPanel: true,
@@ -241,7 +247,9 @@ function RoomDecor({ tone }) {
 
 function OnboardingBubble({ bubble, index }) {
   const asset = bubble.side === 'left' ? bubbleLeft : bubbleRight;
-  const textClass = bubble.side === 'left' ? 'left-[42px] top-[31px]' : 'left-[42px] top-[33px]';
+  const textClass = bubble.textCenter
+    ? 'left-0 right-0 top-[31px] text-center px-[32px]'
+    : bubble.side === 'left' ? `left-[${bubble.paddingLeft ?? 42}px] top-[31px]` : `left-[${bubble.paddingLeft ?? 42}px] top-[33px]`;
 
   return (
     <div
@@ -249,7 +257,13 @@ function OnboardingBubble({ bubble, index }) {
       style={{ left: bubble.left, top: bubble.top }}
     >
       <Asset src={asset} alt={`${bubble.side === 'left' ? '왼쪽' : '오른쪽'} 말풍선`} style={{ left: 0, top: 0, width: 273, height: 153 }} />
-      <p className={`absolute ${textClass} whitespace-pre-line text-[25px] font-black leading-tight text-violet-700 drop-shadow-[0_2px_0_rgba(255,255,255,0.85)]`}>
+      <p
+        className={`absolute ${textClass} whitespace-pre-line text-[25px] font-black leading-tight text-violet-700 drop-shadow-[0_2px_0_rgba(255,255,255,0.85)]`}
+        style={{
+          ...(bubble.fontSize && { fontSize: `${bubble.fontSize}px` }),
+          ...(bubble.color && { color: bubble.color }),
+        }}
+      >
         {bubble.text.join('\n')}
       </p>
     </div>
@@ -269,12 +283,12 @@ function CharacterArea({ state }) {
   );
 }
 
-function MissionPanel({ mode, hearts = 0, showStart = false, showReplay = false, listening = false, onNext }) {
+function MissionPanel({ mode, hearts = 0, showStart = false, showReplay = false, listening = false, showEmptyHearts = false, onNext }) {
   return (
     <aside className="absolute left-[1035px] top-[146px] z-30 h-[755px] w-[263px] panel-slide">
       <Asset src={panelDailyMission} alt="오늘의 미션 패널" className="ui-shadow panel-breathe" style={{ left: 0, top: 0, width: 263, height: 755 }} />
-      {hearts > 0 && (
-        <div className="absolute left-[79px] top-[142px] grid gap-[71px]">
+      {(hearts > 0 || showEmptyHearts) && (
+        <div className="absolute left-[57px] top-[142px] grid gap-[10px]">
           {[0, 1, 2].map((heart) => (
             <div
               key={heart}
@@ -287,7 +301,7 @@ function MissionPanel({ mode, hearts = 0, showStart = false, showReplay = false,
         </div>
       )}
       {showReplay && (
-        <div className="absolute left-[30px] top-[632px] z-40 grid w-[202px] gap-3">
+        <div className="absolute left-[30px] top-[610px] z-40 grid w-[202px] gap-3">
           <button
             className="secondary-button panel-secondary"
             onClick={(event) => {
@@ -303,19 +317,14 @@ function MissionPanel({ mode, hearts = 0, showStart = false, showReplay = false,
               event.stopPropagation();
             }}
           >
-            다시 하기
+            미션 다시 하기
           </button>
         </div>
       )}
-      {listening && (
-        <div className="absolute left-[30px] top-[604px] z-40 grid h-[56px] w-[202px] place-items-center rounded-[20px] bg-violet-500/70 text-[19px] font-black text-white shadow-soft">
-          말하는 중...
-        </div>
-      )}
-      {mode === 'highlightStart' && <div className="absolute left-[22px] top-[596px] h-[132px] w-[236px] rounded-[36px] ring-8 ring-white/75 highlight-pulse" />}
+      {mode === 'highlightStart' && <div className="absolute left-[16px] top-[596px] h-[132px] w-[236px] rounded-[36px] ring-8 ring-white/75 highlight-pulse" />}
       {showStart && (
         <button
-          className="start-button absolute left-[23px] top-[596px] h-[132px] w-[236px]"
+          className="start-button absolute left-[17px] top-[596px] h-[132px] w-[236px]"
           aria-label="시작하기"
           onClick={(event) => {
             event.stopPropagation();
@@ -358,13 +367,9 @@ function CharacterCollectionButton({ highlight = false }) {
 
 function MissionCard({ onNext }) {
   return (
-    <div className="absolute left-[454px] top-[670px] z-40 flex items-center gap-8 rounded-[34px] border-[6px] border-white bg-white/88 px-9 py-6 shadow-soft mission-card">
-      <div>
-        <p className="text-[20px] font-black text-fuchsia-500">오늘의 말 먹이</p>
-        <p className="text-[38px] font-black text-violet-700">빨간 사과</p>
-      </div>
+    <div className="absolute left-[350px] top-[800px] z-40 mission-card">
       <button
-        className="prototype-button mic-pulse"
+        className="prototype-button cta-next mic-pulse w-[320px]"
         onClick={(event) => {
           event.stopPropagation();
           onNext();
@@ -378,7 +383,7 @@ function MissionCard({ onNext }) {
 
 function ListeningStatus() {
   return (
-    <div className="absolute left-[362px] top-[742px] z-40 flex w-[542px] flex-col items-center gap-5">
+    <div className="absolute left-[320px] top-[742px] z-40 flex w-[542px] flex-col items-center gap-5">
       <div className="listening-wave" aria-hidden="true">
         {Array.from({ length: 17 }).map((_, index) => (
           <span key={index} style={{ animationDelay: `${(index % 6) * 0.08}s` }} />
@@ -392,7 +397,7 @@ function ListeningStatus() {
 function PrototypeCTA({ cta, onNext }) {
   return (
     <button
-      className="prototype-button cta-bounce absolute z-50"
+      className={`prototype-button cta-bounce absolute z-50${cta.extraClass ? ` ${cta.extraClass}` : ''}`}
       style={{ left: cta.left, top: cta.top, width: cta.width }}
       onClick={(event) => {
         event.stopPropagation();
@@ -453,7 +458,7 @@ function OnboardingStep({ step, index, onNext }) {
       {step.bubbles.map((bubble, bubbleIndex) => (
         <OnboardingBubble key={`${step.id}-${bubbleIndex}`} bubble={bubble} index={bubbleIndex} />
       ))}
-      {step.showPanel && <MissionPanel mode={step.panelMode} hearts={step.hearts} showStart={step.startButton} showReplay={step.replayButton} listening={step.listening} onNext={onNext} />}
+      {step.showPanel && <MissionPanel mode={step.panelMode} hearts={step.hearts} showStart={step.startButton} showReplay={step.replayButton} listening={step.listening} showEmptyHearts={step.showEmptyHearts} onNext={onNext} />}
       {step.showProgress && <ProgressBar />}
       {step.collection && <CharacterCollectionButton highlight={step.collectionHighlight} />}
       {step.missionCard && <MissionCard onNext={onNext} />}
