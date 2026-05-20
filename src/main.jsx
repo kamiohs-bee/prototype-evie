@@ -249,7 +249,7 @@ function OnboardingBubble({ bubble, index }) {
   const asset = bubble.side === 'left' ? bubbleLeft : bubbleRight;
   const textClass = bubble.textCenter
     ? 'left-0 right-0 top-[31px] text-center px-[32px]'
-    : bubble.side === 'left' ? `left-[${bubble.paddingLeft ?? 42}px] top-[31px]` : `left-[${bubble.paddingLeft ?? 42}px] top-[33px]`;
+    : bubble.side === 'left' ? 'top-[31px]' : 'top-[33px]';
 
   return (
     <div
@@ -261,6 +261,7 @@ function OnboardingBubble({ bubble, index }) {
         className={`absolute ${textClass} whitespace-pre-line text-[28px] font-black leading-tight text-violet-700 drop-shadow-[0_2px_0_rgba(255,255,255,0.85)]`}
         style={{
           fontFamily: "'MaplestoryOTF', sans-serif",
+          ...(!bubble.textCenter && { left: `${bubble.paddingLeft ?? 42}px` }),
           ...(bubble.fontSize && { fontSize: `${bubble.fontSize}px` }),
           ...(bubble.color && { color: bubble.color }),
         }}
