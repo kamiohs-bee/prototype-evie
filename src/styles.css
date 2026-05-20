@@ -345,7 +345,7 @@ button {
 }
 
 .progress-fill {
-  width: 42%;
+  width: 30%;
   animation: progress-fill-in 900ms ease-out both;
   box-shadow: 0 0 14px rgba(255, 111, 195, 0.72);
 }
@@ -617,7 +617,7 @@ button {
   }
 
   100% {
-    width: 42%;
+    width: 30%;
   }
 }
 

@@ -161,6 +161,7 @@ const steps = [
     showProgress: true,
     collection: true,
     replayButton: true,
+    staticStar: true,
   },
 ];
 
@@ -340,7 +341,7 @@ function MissionPanel({ mode, hearts = 0, showStart = false, showReplay = false,
   );
 }
 
-function ProgressBar() {
+function ProgressBar({ staticStar = false }) {
   return (
     <div className="custom-progress absolute left-[304px] top-[812px] z-30 h-[105px] w-[700px] progress-glow">
       <div className="progress-shell absolute left-[48px] top-[23px] h-[58px] w-[642px] rounded-full border-[6px] border-white bg-white/90 shadow-soft">
@@ -348,11 +349,11 @@ function ProgressBar() {
           <div className="progress-fill h-full rounded-r-full bg-gradient-to-r from-fuchsia-500 via-pink-400 to-violet-500" />
         </div>
         <div className="score-box absolute right-[24px] top-[7px] grid h-[34px] w-[128px] place-items-center rounded-full bg-white/70">
-          <p className="text-[22px] font-black text-violet-500">120 / 300</p>
+          <p className="text-[22px] font-black text-violet-500">30 / 100</p>
         </div>
       </div>
-      <Asset src={levelStar} alt="레벨 3" className="level-star-sparkle" style={{ left: 0, top: 0, width: 104, height: 105 }} />
-      <span className="absolute left-[42px] top-[31px] z-10 text-[28px] font-black text-orange-500 drop-shadow-[0_2px_0_white]">3</span>
+      <Asset src={levelStar} alt="레벨 1" className={staticStar ? '' : 'level-star-sparkle'} style={{ left: 0, top: 0, width: 104, height: 105 }} />
+      <span className="absolute left-0 top-[31px] z-10 w-[104px] text-center text-[28px] font-black text-orange-500 drop-shadow-[0_2px_0_white]" style={{ fontFamily: "'MaplestoryOTF', sans-serif" }}>1</span>
     </div>
   );
 }
@@ -461,7 +462,7 @@ function OnboardingStep({ step, index, onNext }) {
         <OnboardingBubble key={`${step.id}-${bubbleIndex}`} bubble={bubble} index={bubbleIndex} />
       ))}
       {step.showPanel && <MissionPanel mode={step.panelMode} hearts={step.hearts} showStart={step.startButton} showReplay={step.replayButton} listening={step.listening} showEmptyHearts={step.showEmptyHearts} onNext={onNext} />}
-      {step.showProgress && <ProgressBar />}
+      {step.showProgress && <ProgressBar staticStar={step.staticStar} />}
       {step.collection && <CharacterCollectionButton highlight={step.collectionHighlight} />}
       {step.missionCard && <MissionCard onNext={onNext} />}
       {step.listening && <ListeningStatus />}
