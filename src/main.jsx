@@ -43,18 +43,20 @@ const steps = [
     id: 1,
     tone: 'dark',
     character: 'sad',
+    centeredOffset: 155,
     bubbles: [
-      { side: 'left', text: ['안녕...', '나는 이비야.'], left: 96, top: 257 },
-      { side: 'right', text: ['요즘 너무', '배가 고파 😢'], left: 704, top: 369 },
+      { side: 'left', text: ['안녕...', '나는 이비야.'], left: 251, top: 257 },
+      { side: 'right', text: ['요즘 너무', '배가 고파 😢'], left: 859, top: 369 },
     ],
   },
   {
     id: 2,
     tone: 'dark',
     character: 'sad',
+    centeredOffset: 155,
     bubbles: [
-      { side: 'left', text: ['네 목소리를 들으면', '힘이 날 것 같아!'], left: 96, top: 257, paddingLeft: 28 },
-      { side: 'right', text: ['목소리를', '들려줄래?'], left: 704, top: 369 },
+      { side: 'left', text: ['네 목소리를 들으면', '힘이 날 것 같아!'], left: 251, top: 257, paddingLeft: 28 },
+      { side: 'right', text: ['목소리를', '들려줄래?'], left: 859, top: 369 },
     ],
     cta: { label: '응, 들려줄게!', left: 508, top: 822, width: 350, extraClass: 'cta-next' },
   },
@@ -62,9 +64,10 @@ const steps = [
     id: 3,
     tone: 'bright',
     character: 'excited',
+    centeredOffset: 155,
     bubbles: [
-      { side: 'left', text: ['정말?!', '고마워!'], left: 98, top: 248 },
-      { side: 'right', text: ['말 먹이', '시간이야!'], left: 720, top: 368 },
+      { side: 'left', text: ['정말?!', '고마워!'], left: 253, top: 248 },
+      { side: 'right', text: ['말 먹이', '시간이야!'], left: 875, top: 368 },
     ],
     confetti: true,
   },
@@ -72,6 +75,8 @@ const steps = [
     id: 4,
     tone: 'bright',
     character: 'happy',
+    slideLeft: true,
+    bgLeft: -133,
     bubbles: [{ side: 'left', text: ['시작하기 버튼을', '눌러서 시작하자!'], left: 96, top: 257 }],
     showPanel: true,
     panelMode: 'highlightStart',
@@ -90,6 +95,7 @@ const steps = [
     missionCard: true,
     speakButton: true,
     showEmptyHearts: true,
+    bgLeft: -133,
   },
   {
     id: 6,
@@ -99,6 +105,7 @@ const steps = [
     showPanel: true,
     listening: true,
     showEmptyHearts: true,
+    bgLeft: -133,
   },
   {
     id: 7,
@@ -111,6 +118,7 @@ const steps = [
     showPanel: true,
     hearts: 1,
     cta: { label: '다음', left: 380, top: 800, width: 320, extraClass: 'cta-next' },
+    bgLeft: -133,
   },
   {
     id: 8,
@@ -121,6 +129,7 @@ const steps = [
     hearts: 3,
     confetti: true,
     replayButton: true,
+    bgLeft: -133,
   },
   {
     id: 9,
@@ -131,6 +140,7 @@ const steps = [
     hearts: 3,
     showProgress: true,
     replayButton: true,
+    bgLeft: -133,
   },
   {
     id: 10,
@@ -146,6 +156,7 @@ const steps = [
     collection: true,
     collectionHighlight: true,
     replayButton: true,
+    bgLeft: -133,
   },
   {
     id: 11,
@@ -162,6 +173,7 @@ const steps = [
     collection: true,
     replayButton: true,
     staticStar: true,
+    bgLeft: -133,
   },
 ];
 
@@ -222,10 +234,24 @@ function HeaderButtons() {
   );
 }
 
-function RoomDecor({ tone }) {
+function RoomDecor({ tone, bgLeft = 0 }) {
   return (
     <>
-      <Asset src={bg} alt="분홍색 게임 방 배경" className="stage-bg" style={{ left: 0, top: 0, width: CANVAS.width, height: CANVAS.height }} />
+      <div
+        role="img"
+        aria-label="분홍색 게임 방 배경"
+        className="absolute pointer-events-none stage-bg"
+        style={{
+          left: `${bgLeft}px`,
+          top: 0,
+          width: 1499,
+          height: 1024,
+          backgroundImage: `url(${bg})`,
+          backgroundSize: '1499px 1024px',
+          backgroundPosition: '0 0',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
       {tone === 'dark' && <div className="absolute inset-0 z-[1] bg-[#15091f]/65 backdrop-brightness-75" />}
       <div className="sparkle-layer" aria-hidden="true">
         {sparkles.map((sparkle, index) => (
@@ -273,16 +299,21 @@ function OnboardingBubble({ bubble, index }) {
   );
 }
 
-function CharacterArea({ state }) {
-  const layout = characterLayout[state];
+function CharacterArea({ state, centeredOffset = 0, slideLeft = false }) {
+  const base = characterLayout[state];
 
   return (
-    <Asset
-      src={characterAssets[state]}
-      alt={`이비 ${state} 상태`}
-      className={`z-20 character-glow ${state === 'excited' ? 'character-hop' : 'character-float'}`}
-      style={layout}
-    />
+    <div
+      className={`absolute z-20 ${slideLeft ? 'character-slide-left' : ''}`}
+      style={{ left: base.left + centeredOffset, top: base.top, width: base.width, height: base.height }}
+    >
+      <Asset
+        src={characterAssets[state]}
+        alt={`이비 ${state} 상태`}
+        className={`character-glow ${state === 'excited' ? 'character-hop' : 'character-float'}`}
+        style={{ left: 0, top: 0, width: base.width, height: base.height }}
+      />
+    </div>
   );
 }
 
@@ -455,9 +486,9 @@ function StepIndicator({ current }) {
 function OnboardingStep({ step, index, onNext }) {
   return (
     <>
-      <RoomDecor tone={step.tone} />
+      <RoomDecor tone={step.tone} bgLeft={step.bgLeft ?? 0} />
       {step.showHeader && <HeaderButtons />}
-      <CharacterArea state={step.character} />
+      <CharacterArea state={step.character} centeredOffset={step.centeredOffset} slideLeft={step.slideLeft} />
       {step.bubbles.map((bubble, bubbleIndex) => (
         <OnboardingBubble key={`${step.id}-${bubbleIndex}`} bubble={bubble} index={bubbleIndex} />
       ))}
